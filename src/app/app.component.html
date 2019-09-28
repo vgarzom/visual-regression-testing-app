@@ -34,27 +34,51 @@
     <nz-page-header [nzBackIcon]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (nzBack)="isCollapsed = !isCollapsed">
 
       <nz-page-header-title>Última prueba</nz-page-header-title>
-      <nz-page-header-subtitle>Hace ... dias, meses, años</nz-page-header-subtitle>
+      <nz-page-header-subtitle>{{getTimeFromLastTest()}}</nz-page-header-subtitle>
       <nz-page-header-tags>
         <nz-tag [nzColor]="'red'">Warning</nz-tag>
       </nz-page-header-tags>
       <nz-page-header-extra>
-          <button nz-button nzType="primary" (click)="showConfirm()"><i nz-icon nzType="plus" nzTheme="outline"></i>Nueva prueba</button>
+        <button nz-button nzType="primary" (click)="showConfirm()"><i nz-icon nzType="plus" nzTheme="outline"></i>Nueva
+          prueba</button>
       </nz-page-header-extra>
-      <nz-page-header-content>
+      <nz-page-header-content *ngIf="lastTest">
         <div class="wrap">
           <div nz-row class="content padding">
             <nz-descriptions [nzColumn]="2">
               <nz-descriptions-item nzTitle="Solicitada por" [nzSpan]="1">Lili Qu</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="identificador" [nzSpan]="1"><a>421421</a></nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Fecha de creación" [nzSpan]="1">2017-01-10</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Tiempo de prueba" [nzSpan]="1">2017-10-10</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Remarks" [nzSpan]="2">
-                Gonghu Road, Xihu District, Hangzhou, Zhejiang, China
+              <nz-descriptions-item nzTitle="identificador" [nzSpan]="1"><a>{{lastTest._id}}</a></nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Inicio" [nzSpan]="1">{{lastTest.reporterStats.start | date:'medium'}}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Fin" [nzSpan]="1">{{lastTest.reporterStats.end | date:'medium'}}
+              </nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Duración de la prueba" [nzSpan]="1">{{lastTest.reporterStats.duration}}
+                milisegundos</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Resumen" [nzSpan]="2">
+                <nz-badge [nzCount]="lastTest.reporterStats.suites" class="summary-badge" nzShowZero
+                  [nzStyle]="getSummaryBackgroundStyle('suites')">
+                  <nz-tag [nzColor]="'#108ee9'">Suites</nz-tag>
+                </nz-badge>
+                <nz-badge [nzCount]="lastTest.reporterStats.tests" class="summary-badge" nzShowZero
+                  [nzStyle]="getSummaryBackgroundStyle('tests')">
+                  <nz-tag [nzColor]="'#108ee9'">Tests</nz-tag>
+                </nz-badge>
+                <nz-badge [nzCount]="lastTest.reporterStats.passes" class="summary-badge" nzShowZero
+                  [nzStyle]="getSummaryBackgroundStyle('passes')">
+                  <nz-tag [nzColor]="'#108ee9'">Passes</nz-tag>
+                </nz-badge>
+                <nz-badge [nzCount]="lastTest.reporterStats.pending" class="summary-badge" nzShowZero
+                  [nzStyle]="getSummaryBackgroundStyle('pending')">
+                  <nz-tag [nzColor]="'#108ee9'">Pending</nz-tag>
+                </nz-badge>
+                <nz-badge [nzCount]="lastTest.reporterStats.failures" class="summary-badge" nzShowZero
+                  [nzStyle]="getSummaryBackgroundStyle('failures')">
+                  <nz-tag [nzColor]="'#108ee9'">Failures</nz-tag>
+                </nz-badge>
               </nz-descriptions-item>
             </nz-descriptions>
           </div>
-          
+
         </div>
       </nz-page-header-content>
       <nz-page-header-footer>
