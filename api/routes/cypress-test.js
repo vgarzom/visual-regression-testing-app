@@ -3,6 +3,7 @@ var router = express.Router();
 const cypress = require('cypress')
 const fs = require('fs');
 const public_directory = "./public/";
+var CypressTest = require('../models/cypress-test.model');
 
 function makeid(length) {
   var result = '';
@@ -16,7 +17,7 @@ function makeid(length) {
 
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.post('/', function (req, res, next) {
 
   cypress.run({
     spec: './cypress/integration/color_palette_test.spec.js',
@@ -39,13 +40,17 @@ router.get('/', function (req, res, next) {
             s.path = `${public_directory}${s.name}`;
           });
         });
-        res.send({
-          code: 200,
-          data: {
-            reporterStats: data.reporterStats,
-            error: data.error,
-            screenshots: data.screenshots
-          }
+        let test = {
+          reporterStats: data.reporterStats,
+          error: data.error,
+          screenshots: data.screenshots
+        }
+        CypressTest.create(test, function (err, post) {
+          if (err) return next(err);
+          res.send({
+            code: 200,
+            data: post
+          });
         });
       } else {
         res.send({
@@ -63,6 +68,20 @@ router.get('/', function (req, res, next) {
         error: err
       });
     })
+});
+
+router.get('/', function (req, res, next) {
+  CypressTest.find(function (err, products) {
+    if (err) return next(err);
+    res.json(products);
+  }).sort('-creation_date');
+});
+
+router.get('/last', function (req, res, next) {
+  CypressTest.findOne(function (err, products) {
+    if (err) return next(err);
+    res.json(products);
+  }).sort('-creation_date');
 });
 
 module.exports = router;
