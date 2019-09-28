@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "debug_backend": "nodemon ./server.js",
+    "debug_frontend": "ng serve --proxy-config proxy.config.json",
     "start": "ng build && node ./server.js",
     "build": "ng build",
     "test": "ng test",
@@ -20,11 +22,14 @@
     "@angular/platform-browser-dynamic": "~8.2.8",
     "@angular/router": "~8.2.8",
     "body-parser": "^1.19.0",
+    "cypress": "^3.4.1",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
     "ng-zorro-antd": "^8.1.2",
+    "nodemon": "^1.19.2",
     "rxjs": "~6.4.0",
     "serve-favicon": "^2.5.0",
+    "system-commands": "^1.1.7",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
