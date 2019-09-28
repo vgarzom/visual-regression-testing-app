@@ -36,7 +36,7 @@ router.get('/', function (req, res, next) {
           }
           fs.copyFile(s.path, `${public_directory}${s.name}`, (err) => {
             if (err) throw err;
-            console.log('source.txt was copied to destination.txt');
+            s.path = `${public_directory}${s.name}`;
           });
         });
         res.send({
