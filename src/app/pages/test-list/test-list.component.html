@@ -5,23 +5,40 @@
         <th>Prueba</th>
         <th>Imagen 1</th>
         <th>Imagen 2</th>
+        <th>Diferencias</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let data of testsTable.data">
         <td style="max-width: 600px">
-          <nz-descriptions [nzColumn]="1">
+          <nz-descriptions [nzColumn]="1" nzSize="small" nzBordered>
             <nz-descriptions-item nzTitle="Solicitada por" [nzSpan]="1">Lili Qu</nz-descriptions-item>
             <nz-descriptions-item nzTitle="id" [nzSpan]="1">{{data._id}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="inicio" [nzSpan]="1">{{data.reporterStats.start | date:'short'}}
             </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="fin" [nzSpan]="1">{{data.reporterStats.end | date:'short'}}
+            <nz-descriptions-item nzTitle="duración" [nzSpan]="1">{{data.reporterStats.duration}} ms
             </nz-descriptions-item>
-
+            <nz-descriptions-item nzTitle="Resumen" [nzSpan]="2">
+              <nz-badge [nzCount]="data.reporterStats.tests" nzShowZero
+                [nzStyle]="getSummaryBackgroundStyle('tests', data)">
+                <nz-tag [nzColor]="'#108ee9'">Tests</nz-tag>
+              </nz-badge>
+              <nz-badge [nzCount]="data.reporterStats.passes" class="summary-badge" nzShowZero
+                [nzStyle]="getSummaryBackgroundStyle('passes', data)">
+                <nz-tag [nzColor]="'#108ee9'">Passes</nz-tag>
+              </nz-badge>
+            </nz-descriptions-item>
           </nz-descriptions>
         </td>
-        <td><div *ngIf="data.screenshots.length > 0"><img [src]="getPath(data, 0)" [ngStyle]="{ width: '200px' }"/></div></td>
-        <td><div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" [ngStyle]="{ width: '200px' }"/></div></td>
+        <td>
+          <div *ngIf="data.screenshots.length > 0"><img [src]="getPath(data, 0)" [ngStyle]="{ width: '200px' }" /></div>
+        </td>
+        <td>
+          <div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" [ngStyle]="{ width: '200px' }" /></div>
+        </td>
+        <td>
+          <div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" [ngStyle]="{ width: '200px' }" /></div>
+        </td>
       </tr>
     </tbody>
   </nz-table>

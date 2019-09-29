@@ -32,4 +32,35 @@ export class TestListComponent implements OnInit {
     }
   }
 
+  getSummaryBackgroundStyle(key: string, data:any): any {
+    const successColor = "#87d068";
+    const errorColor = "#f50";
+    const neutralColor = "#2db7f5";
+
+    switch (key) {
+      
+      case 'tests':
+        return {
+          "background-color": neutralColor
+        }
+
+      case 'passes':
+        if (data.reporterStats.passes === data.reporterStats.tests) {
+          return {
+            "background-color": successColor
+          }
+        }
+        else {
+          return {
+            "background-color": errorColor
+          }
+        }
+
+      default:
+        return {}
+
+    }
+    return {};
+  }
+
 }
