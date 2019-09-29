@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { CypressTestService } from './service-clients/cypress-test.service';
 import { CypressTest } from '../../api/models/cypress-test.model';
+import { OnTestCreatedService } from './service-clients/ont-test-created.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,11 @@ import { CypressTest } from '../../api/models/cypress-test.model';
 export class AppComponent implements OnInit {
   isCollapsed = false;
   lastTest: CypressTest = null;
+  isSpinning:boolean = false;
   constructor(
     private modalService: NzModalService,
-    private cypressTestService: CypressTestService
+    private cypressTestService: CypressTestService,
+    private onTestCreatedService: OnTestCreatedService
   ) { }
 
   showConfirm(): void {
@@ -22,22 +25,30 @@ export class AppComponent implements OnInit {
       nzContent: 'Una vez inicia la prueba no puede ser cancelada o detenida. ¿Deseas continuar?',
       nzOkText: 'Si',
       nzCancelText: 'No',
-      nzOnOk: this.initTest
+      nzOnOk: () => {this.initTest()}
     });
 
   }
 
   initTest(): void {
     console.log("starting test");
+    this.cypressTestService.create({}, (res) => {
+      this.updateLast();
+      this.onTestCreatedService.onTestCreated(true);
+    })
   }
 
   ngOnInit() {
+    this.updateLast();
+  }
+
+  updateLast() {
     this.cypressTestService.getLast(
       res => {
         this.lastTest = res;
       },
       err => {
-
+        console.log("error consultando");
       }
     )
   }

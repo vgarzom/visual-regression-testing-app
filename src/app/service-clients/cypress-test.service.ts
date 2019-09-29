@@ -9,9 +9,7 @@ export class CypressTestService {
 
   constructor(
     private http: HttpClient
-  ) {
-
-  }
+  ) {}
 
 
   getLast(callback, errorCallback): void {

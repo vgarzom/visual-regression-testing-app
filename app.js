@@ -25,7 +25,12 @@ app.use('/api/cypress-test', require('./api/routes/cypress-test'));
 
 // Mongoose configuration
 mongoose.Promise = require('bluebird');
-mongoose.connect(`mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${db.database}`, { useNewUrlParser: true, promiseLibrary: require('bluebird') })
+let connectionStr = `mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${db.database}`;
+if (db.host === "localhost") {
+  connectionStr = `mongodb://${db.host}:${db.port}/${db.database}`;
+}
+
+mongoose.connect(connectionStr, { useNewUrlParser: true, promiseLibrary: require('bluebird') })
   .then(() => console.log('connection to ' + db.database + ' succesful'))
   .catch((err) => console.error(err));
 

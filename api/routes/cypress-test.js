@@ -79,8 +79,11 @@ router.get('/', function (req, res, next) {
 
 router.get('/last', function (req, res, next) {
   CypressTest.findOne(function (err, products) {
-    if (err) return next(err);
-    res.json(products);
+    if (err) {
+      res.json({ code: 400, message: "Error consultando", error: err })
+    } else {
+      res.json(products);
+    }
   }).sort('-creation_date');
 });
 
