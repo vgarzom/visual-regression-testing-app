@@ -36,7 +36,8 @@
       <nz-page-header-title *ngIf="loadingStatus === 'found'">Última prueba</nz-page-header-title>
       <nz-page-header-title *ngIf="loadingStatus === 'not-found'">No hay pruebas</nz-page-header-title>
       <nz-page-header-title *ngIf="loadingStatus === 'loading'">Cargando última prueba...</nz-page-header-title>
-      <nz-page-header-title *ngIf="loadingStatus === 'executing-test'">Ejecutando una nueva prueba...</nz-page-header-title>
+      <nz-page-header-title *ngIf="loadingStatus === 'executing-test'">Ejecutando una nueva prueba...
+      </nz-page-header-title>
 
       <nz-page-header-subtitle *ngIf="loadingStatus === 'found'">{{getTimeFromLastTest()}}
       </nz-page-header-subtitle>
@@ -46,14 +47,15 @@
         <nz-tag [nzColor]="'green'" *ngIf="lastTest.status === 'success'">Exitosa</nz-tag>
       </nz-page-header-tags>
       <nz-page-header-extra>
-        <button nz-button nzType="primary" (click)="showConfirm()"><i nz-icon nzType="plus" nzTheme="outline"></i>Nueva
+        <button nz-button nzType="primary" (click)="showConfirm(tplContent)"><i nz-icon nzType="plus"
+            nzTheme="outline"></i>Nueva
           prueba</button>
       </nz-page-header-extra>
       <nz-page-header-content>
         <div nz-row nzAlign="middle" *ngIf="loadingStatus === 'executing-test'">
-            <div nz-col nzSpan="6" style="text-align: center">
-              <nz-progress [nzPercent]="newTestProgress" nzType="circle" [nzStatus]="newTestStatus"></nz-progress>
-            </div>
+          <div nz-col nzSpan="6" style="text-align: center">
+            <nz-progress [nzPercent]="newTestProgress" nzType="circle" [nzStatus]="newTestStatus"></nz-progress>
+          </div>
           <div nz-col nzSpan="18">
             <nz-skeleton [nzActive]="true" rows="2"></nz-skeleton>
           </div>
@@ -107,3 +109,11 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+
+<ng-template #tplContent>
+  <p>Una vez iniciada la prueba no podrá detenerse o cancelarse.</p>
+  <p>Ingresa tu nombre completo para continuar:</p>
+  <nz-input-group [nzAddOnBeforeIcon]="'user'">
+      <input type="text" nz-input [(ngModel)]="requesterName" />
+    </nz-input-group>
+</ng-template>

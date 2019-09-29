@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { CypressTestService } from './service-clients/cypress-test.service';
 import { CypressTest } from '../../api/models/cypress-test.model';
 import { OnTestCreatedService } from './service-clients/ont-test-created.service';
+import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-root',
@@ -16,22 +17,33 @@ export class AppComponent implements OnInit {
   newTestProgress: number = 0;
   newTestStatus: String = "active";
   loadingStatus = "stopped";
-  maxTime: number = 15000; //Max time in milliseconds to create a test.
+  maxTime: number = 20000; //Max time in milliseconds to create a test.
   intervalTime: number = 50; //Time between progress change
-
+  requesterName: String = "";
   constructor(
     private modalService: NzModalService,
     private cypressTestService: CypressTestService,
-    private onTestCreatedService: OnTestCreatedService
+    private onTestCreatedService: OnTestCreatedService,
+    private notification: NzNotificationService
   ) { }
 
-  showConfirm(): void {
+  showConfirm(tplContent: TemplateRef<{}>): void {
     let r = this.modalService.confirm({
       nzTitle: 'Iniciar prueba',
-      nzContent: 'Una vez inicia la prueba no puede ser cancelada o detenida. ¿Deseas continuar?',
-      nzOkText: 'Si',
-      nzCancelText: 'No',
-      nzOnOk: () => { this.initTest() }
+      nzContent: tplContent,
+      nzOkText: 'Iniciar',
+      nzCancelText: 'Cancelar',
+      nzOnOk: () => {
+        if (this.requesterName === "") {
+          this.notification.blank(
+            '',
+            'Debes ingresar tu nombre para iniciar la prueba',
+            {nzDuration: 3000}
+          );
+          return false;
+        }
+        this.initTest();
+      }
     });
 
   }
@@ -49,7 +61,7 @@ export class AppComponent implements OnInit {
     }, this.intervalTime);
 
 
-    this.cypressTestService.create({ requester: "Victor Garzón" }, (res) => {
+    this.cypressTestService.create({ requester: this.requesterName }, (res) => {
       clearInterval(interval);
       this.newTestProgress = 100;
       this.newTestStatus = res.data.status === 'success' ? "success" : "exception";
