@@ -18,56 +18,77 @@ function makeid(length) {
 
 /* GET home page. */
 router.post('/', function (req, res, next) {
+  let test = {
+    requester: req.body.requester
+  }
 
-  cypress.run({
-    spec: './cypress/integration/color_palette_test.spec.js',
-    config: {
-      video: false
-    }
+  CypressTest.create(test, function (err, newTest) {
+    if (err) return next(err);
 
-  })
-    .then((results) => {
-      let data = results.runs[0];
-      let id = makeid(12);
-      if (data.error === null) {
-        data.screenshots.map((s, i) => {
-          s.name = `${id}_${i}.png`;
-          if (!fs.existsSync(public_directory)) {
-            fs.mkdirSync(public_directory);
-          }
-          fs.copyFile(s.path, `${public_directory}${s.name}`, (err) => {
-            if (err) throw err;
-            s.path = `${public_directory}${s.name}`;
-          });
-        });
-        let test = {
-          reporterStats: data.reporterStats,
-          error: data.error,
-          screenshots: data.screenshots
-        }
-        CypressTest.create(test, function (err, post) {
-          if (err) return next(err);
-          res.send({
-            code: 200,
-            data: post
-          });
-        });
-      } else {
-        res.send({
-          code: 201,
-          data: {
-            reporterStats: data.reporterStats,
-            error: data.error
-          }
-        });
+    cypress.run({
+      spec: './cypress/integration/color_palette_test.spec.js',
+      config: {
+        video: false
       }
     })
-    .catch((err) => {
-      res.send({
-        code: 202,
-        error: err
-      });
-    })
+      .then((results) => {
+        let data = results.runs[0];
+        let id = makeid(12);
+        if (data.error === null) {
+          data.screenshots.map((s, i) => {
+            s.name = `${id}_${i}.png`;
+            if (!fs.existsSync(public_directory)) {
+              fs.mkdirSync(public_directory);
+            }
+            fs.copyFile(s.path, `${public_directory}${s.name}`, (err) => {
+              if (err) throw err;
+              s.path = `${public_directory}${s.name}`;
+            });
+          });
+
+          newTest.reporterStats = data.reporterStats;
+          newTest.error = data.error;
+          newTest.screenshots = data.screenshots;
+          if (newTest.reporterStats.passes === newTest.reporterStats.tests) {
+            newTest.status = "success";
+          } else {
+            newTest.status = "failed";
+          }
+
+          newTest.save().then(result => {
+            res.send({
+              code: 200,
+              data: result
+            });
+          }).catch(err => {
+            console.log("err", err);
+            res.send({
+              code: 201,
+              data: {
+                reporterStats: data.reporterStats,
+                error: data.error
+              }
+            });
+          });
+        } else {
+          res.send({
+            code: 201,
+            data: {
+              reporterStats: data.reporterStats,
+              error: data.error
+            }
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send({
+          code: 202,
+          error: err
+        });
+      })
+
+  });
 });
 
 router.get('/', function (req, res, next) {

@@ -5,7 +5,8 @@ var CypressTestSchema = new mongoose.Schema({
   error: String,
   screenshots: [Object],
   requester: String,
-  creation_date: {type: Date, default: Date.now}
+  creation_date: {type: Date, default: Date.now},
+  status: {type: String, default: 'in-progress'}
 });
 
 module.exports = mongoose.model('CypressTest', CypressTestSchema);

@@ -12,7 +12,13 @@ import { OnTestCreatedService } from './service-clients/ont-test-created.service
 export class AppComponent implements OnInit {
   isCollapsed = false;
   lastTest: CypressTest = null;
-  isSpinning:boolean = false;
+  newTestTempProgress: number = 0;
+  newTestProgress: number = 0;
+  newTestStatus: String = "active";
+  loadingStatus = "stopped";
+  maxTime: number = 15000; //Max time in milliseconds to create a test.
+  intervalTime: number = 50; //Time between progress change
+
   constructor(
     private modalService: NzModalService,
     private cypressTestService: CypressTestService,
@@ -25,15 +31,38 @@ export class AppComponent implements OnInit {
       nzContent: 'Una vez inicia la prueba no puede ser cancelada o detenida. ¿Deseas continuar?',
       nzOkText: 'Si',
       nzCancelText: 'No',
-      nzOnOk: () => {this.initTest()}
+      nzOnOk: () => { this.initTest() }
     });
 
   }
 
   initTest(): void {
     console.log("starting test");
-    this.cypressTestService.create({}, (res) => {
-      this.updateLast();
+    this.loadingStatus = "executing-test";
+    this.newTestStatus = "active";
+    this.newTestProgress = 0;
+    this.newTestTempProgress = 0;
+
+    let interval = setInterval(() => {
+      this.newTestTempProgress += (this.intervalTime / this.maxTime) * 100;
+      this.newTestProgress = Math.round(this.newTestTempProgress);
+    }, this.intervalTime);
+
+
+    this.cypressTestService.create({ requester: "Victor Garzón" }, (res) => {
+      clearInterval(interval);
+      this.newTestProgress = 100;
+      this.newTestStatus = res.data.status === 'success' ? "success" : "exception";
+      setTimeout(() => {
+        this.updateLast();
+      }, 1000);
+      this.onTestCreatedService.onTestCreated(true);
+    }, (err) => {
+      this.newTestStatus = "exception";
+      clearInterval(interval);
+      setTimeout(() => {
+        this.updateLast();
+      }, 1000);
       this.onTestCreatedService.onTestCreated(true);
     })
   }
@@ -43,9 +72,15 @@ export class AppComponent implements OnInit {
   }
 
   updateLast() {
+    this.loadingStatus = "loading";
     this.cypressTestService.getLast(
       res => {
         this.lastTest = res;
+        if (this.lastTest === null) {
+          this.loadingStatus = "not-found";
+        } else {
+          this.loadingStatus = "found";
+        }
       },
       err => {
         console.log("error consultando");

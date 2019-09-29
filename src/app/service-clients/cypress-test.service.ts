@@ -34,13 +34,13 @@ export class CypressTestService {
     )
   }
 
-  create(cypresstest: CypressTest, callback): void {
+  create(cypresstest: CypressTest, callback, errorCallback): void {
     this.http.post('/api/cypress-test', cypresstest).subscribe(
       (res) => {
         callback(res);
       },
       (err) => {
-        callback(false);
+        errorCallback(err);
       })
   }
 

@@ -33,21 +33,38 @@
   <nz-layout>
     <nz-page-header [nzBackIcon]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (nzBack)="isCollapsed = !isCollapsed">
 
-      <nz-page-header-title>Última prueba</nz-page-header-title>
-      <nz-page-header-subtitle>{{getTimeFromLastTest()}}</nz-page-header-subtitle>
-      <nz-page-header-tags>
-        <nz-tag [nzColor]="'red'">Warning</nz-tag>
+      <nz-page-header-title *ngIf="loadingStatus === 'found'">Última prueba</nz-page-header-title>
+      <nz-page-header-title *ngIf="loadingStatus === 'not-found'">No hay pruebas</nz-page-header-title>
+      <nz-page-header-title *ngIf="loadingStatus === 'loading'">Cargando última prueba...</nz-page-header-title>
+      <nz-page-header-title *ngIf="loadingStatus === 'executing-test'">Ejecutando una nueva prueba...</nz-page-header-title>
+
+      <nz-page-header-subtitle *ngIf="loadingStatus === 'found'">{{getTimeFromLastTest()}}
+      </nz-page-header-subtitle>
+      <nz-page-header-tags *ngIf="found && lastTest">
+        <nz-tag [nzColor]="'orange'" *ngIf="lastTest.status === 'in-progress'">En progreso</nz-tag>
+        <nz-tag [nzColor]="'red'" *ngIf="lastTest.status === 'failed'">Falló</nz-tag>
+        <nz-tag [nzColor]="'green'" *ngIf="lastTest.status === 'success'">Exitosa</nz-tag>
       </nz-page-header-tags>
       <nz-page-header-extra>
         <button nz-button nzType="primary" (click)="showConfirm()"><i nz-icon nzType="plus" nzTheme="outline"></i>Nueva
           prueba</button>
       </nz-page-header-extra>
-      <nz-page-header-content >
-          <nz-skeleton [nzActive]="true" *ngIf="lastTest === null"></nz-skeleton>
-        <div class="wrap" *ngIf="lastTest">
+      <nz-page-header-content>
+        <div nz-row nzAlign="middle" *ngIf="loadingStatus === 'executing-test'">
+            <div nz-col nzSpan="6" style="text-align: center">
+              <nz-progress [nzPercent]="newTestProgress" nzType="circle" [nzStatus]="newTestStatus"></nz-progress>
+            </div>
+          <div nz-col nzSpan="18">
+            <nz-skeleton [nzActive]="true" rows="2"></nz-skeleton>
+          </div>
+        </div>
+        <nz-skeleton [nzActive]="true" *ngIf="loadingStatus === 'loading'"></nz-skeleton>
+        <nz-alert nzBanner nzType="info" *ngIf="loadingStatus === 'not-found'"
+          nzMessage="No hemos encontrado ninguna prueba, empieza creando una!"></nz-alert>
+        <div class="wrap" *ngIf="loadingStatus === 'found' && lastTest">
           <div nz-row class="content padding">
             <nz-descriptions [nzColumn]="2">
-              <nz-descriptions-item nzTitle="Solicitada por" [nzSpan]="1">Lili Qu</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Solicitada por" [nzSpan]="1">{{lastTest.requester}}</nz-descriptions-item>
               <nz-descriptions-item nzTitle="identificador" [nzSpan]="1"><a>{{lastTest._id}}</a></nz-descriptions-item>
               <nz-descriptions-item nzTitle="Inicio" [nzSpan]="1">{{lastTest.reporterStats.start | date:'medium'}}
               </nz-descriptions-item>
