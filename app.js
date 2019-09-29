@@ -19,6 +19,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 'extended': 'false' }));
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use("/public", express.static('public'));
 app.use('/api/books', express.static(path.join(__dirname, 'dist')));
 app.use('/api/cypress-test', require('./api/routes/cypress-test'));
 

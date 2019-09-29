@@ -25,6 +25,17 @@ export class CypressTestService {
     )
   }
 
+  getAll(callback, errorCallback): void {
+    this.http.get(`/api/cypress-test`).subscribe(
+      (res) => {
+        callback(res);
+      },
+      (err) => {
+        errorCallback(err);
+      }
+    )
+  }
+
   create(cypresstest: CypressTest, callback): void {
     this.http.post('/api/cypress-test', cypresstest).subscribe(
       (res) => {

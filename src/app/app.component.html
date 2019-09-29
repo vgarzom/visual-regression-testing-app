@@ -42,8 +42,9 @@
         <button nz-button nzType="primary" (click)="showConfirm()"><i nz-icon nzType="plus" nzTheme="outline"></i>Nueva
           prueba</button>
       </nz-page-header-extra>
-      <nz-page-header-content *ngIf="lastTest">
-        <div class="wrap">
+      <nz-page-header-content >
+          <nz-skeleton [nzActive]="true" *ngIf="lastTest === null"></nz-skeleton>
+        <div class="wrap" *ngIf="lastTest">
           <div nz-row class="content padding">
             <nz-descriptions [nzColumn]="2">
               <nz-descriptions-item nzTitle="Solicitada por" [nzSpan]="1">Lili Qu</nz-descriptions-item>
