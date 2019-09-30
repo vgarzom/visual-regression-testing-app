@@ -12,7 +12,8 @@ import { Subscription } from 'rxjs';
 export class TestListComponent implements OnInit, OnDestroy {
   private onTestCreatedSubscription: Subscription;
   cypressTests: CypressTest[] = [];
-
+  images = [];
+  isVisible = false;
   constructor(
     private cypressTestService: CypressTestService,
     private onTestCreatedService: OnTestCreatedService
@@ -39,7 +40,6 @@ export class TestListComponent implements OnInit, OnDestroy {
   }
 
   getPath(data, position) {
-    console.log("get path", data, position);
     if (position === "diff") {
       return "public/" + data.resemble.img;
     }
@@ -77,6 +77,34 @@ export class TestListComponent implements OnInit, OnDestroy {
 
     }
     return {};
+  }
+
+  showCarousel(data) {
+    this.isVisible = true;
+    setTimeout(() => {
+      this.images = [];
+      if (data.screenshots.length > 0) {
+        this.images.push(
+          {
+            img: "public/" + data.screenshots[0].name,
+            name: 'Imagen 1'
+          });
+      }
+      if (data.screenshots.length > 1) {
+        this.images.push({
+          img: "public/" + data.screenshots[1].name,
+          name: 'Imagen 2'
+        });
+      }
+      if (data.resemble) {
+        this.images.push(
+          {
+            img: "public/" + data.resemble.img,
+            name: "Diferencias"
+          }
+        )
+      }
+    }, 100);
   }
 
 }
