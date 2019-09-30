@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of testsTable.data">
+      <tr *ngFor="let data of testsTable.data" (click)="showCarousel(data)">
         <td style="max-width: 600px">
           <nz-descriptions [nzColumn]="1" nzSize="small" nzBordered>
             <nz-descriptions-item nzTitle="Solicitada por" [nzSpan]="1">{{data.requester}}</nz-descriptions-item>
@@ -35,14 +35,13 @@
           </nz-descriptions>
         </td>
         <td>
-          <div *ngIf="data.screenshots.length > 0" (click)="showCarousel(data)"><img [src]="getPath(data, 0)" class="test-image" /></div>
+          <div *ngIf="data.screenshots.length > 0" ><img [src]="getPath(data, 0)" class="test-image" /></div>
         </td>
         <td>
-          <div *ngIf="data.screenshots.length > 1" (click)="showCarousel(data)"><img [src]="getPath(data, 1)" class="test-image" /></div>
+          <div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" class="test-image" /></div>
         </td>
         <td >
-          <div *ngIf="data.resemble"><img [src]="getPath(data, 'diff')" class="test-image"
-            (click)="showCarousel(data)" /></div>
+          <div *ngIf="data.resemble"><img [src]="getPath(data, 'diff')" class="test-image" /></div>
           <nz-statistic *ngIf="data.resemble" [nzValue]="data.resemble.rawMisMatchPercentage | number: '1.0-2'"
             [nzTitle]="'Diferencias'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'%'" [nzValueStyle]="{ color: '#CF1322' }">
           </nz-statistic>
