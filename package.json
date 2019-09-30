@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "debug_backend": "nodemon ./server.js",
+    "debug_backend": "nodemon app.js",
     "debug_frontend": "ng serve --proxy-config proxy.config.json",
     "start": "node app.js",
     "build": "ng build",
