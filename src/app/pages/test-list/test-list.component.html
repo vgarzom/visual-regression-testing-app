@@ -35,14 +35,14 @@
           </nz-descriptions>
         </td>
         <td>
-          <div *ngIf="data.screenshots.length > 0"><img [src]="getPath(data, 0)" class="test-image" /></div>
+          <div *ngIf="data.screenshots.length > 0" (click)="showCarousel(data)"><img [src]="getPath(data, 0)" class="test-image" /></div>
         </td>
         <td>
-          <div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" class="test-image" /></div>
+          <div *ngIf="data.screenshots.length > 1" (click)="showCarousel(data)"><img [src]="getPath(data, 1)" class="test-image" /></div>
         </td>
-        <td>
+        <td >
           <div *ngIf="data.resemble"><img [src]="getPath(data, 'diff')" class="test-image"
-              (click)="showCarousel(data)" /></div>
+            (click)="showCarousel(data)" /></div>
           <nz-statistic *ngIf="data.resemble" [nzValue]="data.resemble.rawMisMatchPercentage | number: '1.0-2'"
             [nzTitle]="'Diferencias'" [nzPrefix]="prefixTplTwo" [nzSuffix]="'%'" [nzValueStyle]="{ color: '#CF1322' }">
           </nz-statistic>
@@ -53,13 +53,14 @@
   </nz-table>
 </div>
 
-<nz-modal [(nzVisible)]="isVisible" nzTitle="The first Modal" (nzOnCancel)="isVisible=false" (nzOnOk)="handleOk()"
-  [nzWidth]="'800px'">
-  <nz-carousel [nzEffect]="'fade'" [nzDotPosition]="'bottom'" nzAutoPlay>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Imágenes" (nzOnCancel)="isVisible=false" (nzOnOk)="handleOk()"
+  [nzWidth]="'800px'" [nzFooter]="null">
+  <nz-carousel [nzEffect]="'fade'" [nzDotPosition]="'bottom'">
     <div nz-carousel-content *ngFor="let index of images">
       <div>
         <h2>{{index.name}}</h2>
         <img [src]="index.img" class="carousel-image" />
+        <div class="carousel-footer"></div>
       </div>
     </div>
   </nz-carousel>
