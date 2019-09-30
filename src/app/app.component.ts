@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
           this.notification.blank(
             '',
             'Debes ingresar tu nombre para iniciar la prueba',
-            {nzDuration: 3000}
+            { nzDuration: 3000 }
           );
           return false;
         }
@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
 
 
     this.cypressTestService.create({ requester: this.requesterName }, (res) => {
+      console.log("creation result", res);
       clearInterval(interval);
       this.newTestProgress = 100;
       this.newTestStatus = res.data.status === 'success' ? "success" : "exception";
