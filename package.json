@@ -5,11 +5,12 @@
     "ng": "ng",
     "debug_backend": "nodemon ./server.js",
     "debug_frontend": "ng serve --proxy-config proxy.config.json",
-    "start": "ng build && node ./server.js",
+    "start": "node app.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "ng build"
   },
   "private": true,
   "dependencies": {
