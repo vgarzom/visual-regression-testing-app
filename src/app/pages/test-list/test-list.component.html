@@ -54,7 +54,7 @@
 
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Imágenes" (nzOnCancel)="isVisible=false" (nzOnOk)="handleOk()"
   [nzWidth]="'800px'" [nzFooter]="null">
-  <nz-carousel [nzEffect]="'fade'" [nzDotPosition]="'bottom'">
+  <nz-carousel [nzEffect]="'fade'" [nzDotPosition]="'bottom'" nzAutoPlay>
     <div nz-carousel-content *ngFor="let index of images">
       <div>
         <h2>{{index.name}}</h2>
