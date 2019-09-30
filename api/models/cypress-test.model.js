@@ -5,6 +5,7 @@ var CypressTestSchema = new mongoose.Schema({
   error: String,
   screenshots: [Object],
   requester: String,
+  resemble: Object,
   creation_date: {type: Date, default: Date.now},
   status: {type: String, default: 'in-progress'}
 });

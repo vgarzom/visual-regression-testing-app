@@ -30,6 +30,7 @@
     "morgan": "^1.9.1",
     "ng-zorro-antd": "^8.1.2",
     "nodemon": "^1.19.2",
+    "resemblejs": "^3.2.3",
     "rxjs": "~6.4.0",
     "serve-favicon": "^2.5.0",
     "system-commands": "^1.1.7",

@@ -39,6 +39,10 @@ export class TestListComponent implements OnInit, OnDestroy {
   }
 
   getPath(data, position) {
+    console.log("get path", data, position);
+    if (position === "diff") {
+      return "public/" + data.resemble.img;
+    }
     if (data.screenshots.length > position) {
       return "public/" + data.screenshots[position].name;
     }

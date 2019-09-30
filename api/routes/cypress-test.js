@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const cypress = require('cypress')
 const fs = require('fs');
+const resemble = require('resemblejs');
+const compareImages = require("resemblejs/compareImages");
 const public_directory = "./public/";
 var CypressTest = require('../models/cypress-test.model');
 
@@ -14,6 +16,15 @@ function makeid(length) {
   }
   return result;
 }
+
+
+function compareImgs(img1, img2, oncomplete) {
+  var diff = resemble(`./public/${img1}.png`)
+    .compareTo(`./public/${img2}.png`)
+    .onComplete(oncomplete);
+}
+
+
 
 
 /* GET home page. */
@@ -54,8 +65,7 @@ router.post('/', function (req, res, next) {
           } else {
             newTest.status = "failed";
           }
-
-          newTest.save().then(result => {
+          /*newTest.save().then(result => {
             res.send({
               code: 200,
               data: result
@@ -69,7 +79,50 @@ router.post('/', function (req, res, next) {
                 error: data.error
               }
             });
-          });
+          });*/
+          if (data.screenshots.length === 2) {
+
+            compareImgs(`${id}_0`, `${id}_1`, (data) => {
+
+              console.log("data", data)
+              fs.writeFileSync(`${public_directory}${id}_diff.png`, data.getBuffer());
+              newTest.resemble = data;
+              newTest.resemble['img'] = `${id}_diff.png`;
+              newTest.save().then(result => {
+                res.send({
+                  code: 200,
+                  data: result
+                });
+              }).catch(err => {
+                console.log("err", err);
+                res.send({
+                  code: 201,
+                  data: {
+                    reporterStats: data.reporterStats,
+                    error: data.error
+                  }
+                });
+              });
+            })
+          } else {
+            newTest.save().then(result => {
+              res.send({
+                code: 200,
+                data: result
+              });
+            }).catch(err => {
+              console.log("err", err);
+              res.send({
+                code: 201,
+                data: {
+                  reporterStats: data.reporterStats,
+                  error: data.error
+                }
+              });
+            });
+          }
+
+
         } else {
           res.send({
             code: 201,

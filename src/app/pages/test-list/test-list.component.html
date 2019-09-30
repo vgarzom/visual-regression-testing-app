@@ -40,8 +40,16 @@
         <td>
           <div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" class="test-image" /></div>
         </td>
-        <td>
-          <div *ngIf="data.screenshots.length > 1"><img [src]="getPath(data, 1)" class="test-image" /></div>
+        <td *ngIf="data.resemble">
+          <div ><img [src]="getPath(data, 'diff')" class="test-image" /></div>
+          <nz-statistic
+              [nzValue]="data.resemble.rawMisMatchPercentage | number: '1.0-2'"
+              [nzTitle]="'Diferencias'"
+              [nzPrefix]="prefixTplTwo"
+              [nzSuffix]="'%'"
+              [nzValueStyle]="{ color: '#CF1322' }"
+            >
+            </nz-statistic>
         </td>
       </tr>
     </tbody>
